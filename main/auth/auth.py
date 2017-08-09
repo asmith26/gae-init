@@ -407,6 +407,9 @@ def create_user_db(auth_id, name, username, email='', verified=False, **props):
 def signin_user_db(user_db):
   if not user_db:
     return flask.redirect(flask.url_for('signin'))
+  if not user_db.session_token:
+    user_db.session_token = util.uuid()
+    user_db.put()
   flask_user_db = FlaskUser(user_db)
   auth_params = flask.session.get('auth-params', {
     'next': flask.url_for('welcome'),
